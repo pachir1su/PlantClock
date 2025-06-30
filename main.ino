@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <RTClib.h>
 #include <TM1637Display.h>
+#include <LiquidCrystal_I2C.h>
 
 // ---- TM1637 FND 핀 정의 (3개) ----
 #define CLK1_PIN    4
@@ -20,6 +21,10 @@
 #define RGB_B_PIN     9
 #define RGB_G_PIN     10
 #define RGB_R_PIN     11
+
+// ---- 센서 & LCD ----
+#define SOIL_PIN      A0   // 토양 습도 센서
+LiquidCrystal_I2C lcd(0x20, 16, 2); // LCD 주소 및 크기
 
 // ---- 객체 생성 ----
 RTC_DS3231 rtc;
@@ -61,6 +66,8 @@ void setFanLedColor(uint8_t r, uint8_t g, uint8_t b) {
 void setup() {
   Wire.begin();
   rtc.begin();
+  lcd.init();
+  lcd.backlight();
 
   dispNow.setBrightness(0x0f);
   dispLast.setBrightness(0x0f);
@@ -99,10 +106,10 @@ void loop() {
   // ---- 레버 스위치로 팬 제어 (ON=팬ON, OFF=팬OFF) ----
   if (digitalRead(LEVER_PIN) == LOW) { // OFF(풀림)
     setFanOn(false);
-    setFanLedColor(255,0,0);   // 팬 ON - 빨강
+    setFanLedColor(255,0,0);   // 팬 OFF - 빨강
   } else { // ON(눌림)
     setFanOn(true);
-    setFanLedColor(0,255,0);   // 팬 OFF - 초록
+    setFanLedColor(0,255,0);   // 팬 ON - 초록
   }
 
   // ---- TM1637 3개 표시 ----
@@ -129,6 +136,25 @@ void loop() {
     uint16_t val = diff % 10000;
     dispElapsed.showNumberDec(val, false);
   }
+
+  // ---- 토양 습도 표시 (LCD) ----
+  int soilVal = analogRead(SOIL_PIN); // 0(젖음) ~ 1023(건조)
+  lcd.setCursor(0,0);
+  lcd.print("Soil:");
+  lcd.print(soilVal);
+  lcd.print("    ");
+
+  // ---- LCD에 현재 시각 표시 ----
+  lcd.setCursor(0,1);
+  uint16_t h = (accelMin / 60) % 24;
+  uint16_t m = accelMin % 60;
+  lcd.print("Time:");
+  if (h < 10) lcd.print("0");
+  lcd.print(h);
+  lcd.print(":");
+  if (m < 10) lcd.print("0");
+  lcd.print(m);
+  lcd.print("   ");
 
   delay(200);
 }

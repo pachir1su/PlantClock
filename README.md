@@ -1,9 +1,12 @@
 # 🌱 프로젝트 아이디어 No.47 - PlantClock (식물 타이머)
 - 2025 선후배와 함꼐하는 코딩 페스티벌 피지컬 컴퓨팅 분야
-- 
+  
 > **여러 명이 함께 키우는 학급 식물을 위한 급수 기록 & 자동 알림 스마트 화분 프로젝트**
+
 ---
-  ![PlantClock](./media/2025 위코페 작품_PlantClock.jpg)
+
+    ![PlantClock][./media/2025PlantClock.jpg)
+
 ---
 
 ## 프로젝트 개요

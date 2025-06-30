@@ -5,7 +5,7 @@
 
 ---
 
-    ![PlantClock][./media/2025PlantClock.jpg)
+    ![PlantClock](./media/2025PlantClock.jpg)
 
 
 ## 프로젝트 개요
